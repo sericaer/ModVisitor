@@ -13,14 +13,14 @@ namespace ModVisitor
     {
     }
 
-    internal class Setter : Visitor
+    public class Setter : Visitor
     {
         public Setter(string script)
         {
             Parse(script, VisitType.WRITE);
         }
 
-        internal void set(object value)
+        public void set(object value)
         {
             var currData = dictData[innerName];
 
@@ -34,14 +34,14 @@ namespace ModVisitor
         }
     }
 
-    internal class Getter : Visitor
+    public class Getter : Visitor
     {
         public Getter(string script)
         {
             Parse(script, VisitType.READ);
         }
 
-        internal object get()
+        public object get()
         {
             if(is_static)
             {
@@ -60,7 +60,7 @@ namespace ModVisitor
         }
     }
 
-    internal class Visitor
+    public class Visitor
     {
         internal enum VisitType
         {
@@ -72,14 +72,19 @@ namespace ModVisitor
 
         protected static Dictionary<string, List<ReflectionInfo>> dictReflect = new Dictionary<string, List<ReflectionInfo>>();
 
-        internal static void InitData(string key, object gmdata)
+        public static void InitData(string key, object gmdata)
         {
             dictData.Add(key, gmdata);
         }
 
-        internal static void InitReflect(string key, Type type)
+        public static void InitReflect(string key, Type type)
         {
             dictReflect.Add(key, ParseReflectionInfo(type));
+        }
+
+        public static void ClearData()
+        {
+            dictData.Clear();
         }
 
         static List<ReflectionInfo> ParseReflectionInfo(Type type)
@@ -105,7 +110,7 @@ namespace ModVisitor
 
             while (start < raw.Length)
             {
-                var matched = Regex.Match(raw.Substring(start), @"^[A-Za-z]+\.*");
+                var matched = Regex.Match(raw.Substring(start), @"^[A-Za-z_]+\.*");
                 if (!matched.Success)
                 {
                     throw new Exception();
