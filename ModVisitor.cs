@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ModVisitor
 {
-    [System.AttributeUsage(System.AttributeTargets.Field)]
+    [System.AttributeUsage(System.AttributeTargets.Field | System.AttributeTargets.Property)]
     public class ModVisit : System.Attribute
     {
     }
