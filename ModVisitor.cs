@@ -86,9 +86,9 @@ namespace ModVisitor
             dictReflect.Add(key, ParseReflectionInfo(type));
         }
 
-        public static void ClearData()
+        public static void ClearData(string key)
         {
-            dictData.Clear();
+            dictData.Remove(key);
         }
 
         static List<ReflectionInfo> ParseReflectionInfo(Type type)
@@ -159,7 +159,19 @@ namespace ModVisitor
                             return false;
                         }
 
-                        FuncSetStaticValue(matchedValue);
+                        if(matched.Value == "true")
+                        {
+                            FuncSetStaticValue(true);
+                        }
+                        else if (matched.Value == "false")
+                        {
+                            FuncSetStaticValue(false);
+                        }
+                        else
+                        {
+                            FuncSetStaticValue(matchedValue);
+                        }
+                        
                         return true;
                     }
 
@@ -202,7 +214,7 @@ namespace ModVisitor
 
             var convert = script.Replace(" ", "");
 
-            var rslt = Regex.Match(convert, @"^[\+\-]?[0-9]+\.?[0-9]+([\+\-\*/]?[0-9]+\.?[0-9]+)*");
+            var rslt = Regex.Match(convert, @"^[\+\-]?[0-9]+(\.?[0-9]+)*([\+\-\*/]?[0-9]+(\.?[0-9]+)*)*");
             if (!rslt.Success)
             {
                 return false;
@@ -219,7 +231,7 @@ namespace ModVisitor
             {
                 if (start == 0)
                 {
-                    var matched_head = Regex.Match(raw.Substring(start), @"^[\+\-]?[0-9]+\.?[0-9]+");
+                    var matched_head = Regex.Match(raw.Substring(start), @"^[\+\-]?[0-9]+(\.?[0-9]+)*");
                     if (!matched_head.Success)
                     {
                         return false;
@@ -230,7 +242,7 @@ namespace ModVisitor
                     continue;
                 }
 
-                var matched = Regex.Match(raw.Substring(start), @"^[\+\-\*/][0-9]+\.?[0-9]+");
+                var matched = Regex.Match(raw.Substring(start), @"^[\+\-\*/][0-9]+(\.?[0-9]+)*");
                 if (!matched.Success)
                 {
                     return false;
