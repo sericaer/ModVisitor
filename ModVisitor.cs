@@ -202,7 +202,7 @@ namespace ModVisitor
 
             var convert = script.Replace(" ", "");
 
-            var rslt = Regex.Match(convert, @"^[\+\-]?[0-9]+\.?[0-9]+(*[\+\-\*/]?[0-9]+\.?[0-9]+)*");
+            var rslt = Regex.Match(convert, @"^[\+\-]?[0-9]+\.?[0-9]+([\+\-\*/]?[0-9]+\.?[0-9]+)*");
             if (!rslt.Success)
             {
                 return false;
