@@ -17,7 +17,7 @@ namespace ModVisitor
     {
         public Setter(string script)
         {
-            Parse(script, VisitType.WRITE);
+            Parse(script, Type.WRITE);
         }
 
         public void set(object value)
@@ -40,7 +40,7 @@ namespace ModVisitor
         {
             FuncSetStaticValue = (obj)=> staticValue = obj;
 
-            Parse(script, VisitType.READ);
+            Parse(script, Type.READ);
         }
 
         public object get()
@@ -66,7 +66,7 @@ namespace ModVisitor
 
     public class Visitor
     {
-        internal enum VisitType
+        internal enum Type
         {
             READ = 0x01,
             WRITE = 0x10
@@ -81,7 +81,7 @@ namespace ModVisitor
             dictData.Add(key, gmdata);
         }
 
-        public static void InitReflect(string key, Type type)
+        public static void InitReflect(string key, System.Type type)
         {
             dictReflect.Add(key, ParseReflectionInfo(type));
         }
@@ -91,7 +91,7 @@ namespace ModVisitor
             dictData.Remove(key);
         }
 
-        static List<ReflectionInfo> ParseReflectionInfo(Type type)
+        static List<ReflectionInfo> ParseReflectionInfo(System.Type type)
         {
             var rslt = new List<ReflectionInfo>();
 
@@ -110,7 +110,7 @@ namespace ModVisitor
             return rslt;
         }
 
-        internal void Parse(string script, VisitType vistType)
+        internal void Parse(string script, Type vistType)
         {
 
             raw = script;
@@ -128,7 +128,7 @@ namespace ModVisitor
             throw new Exception($"parse string faild! script:{script}, visit type:{vistType}");
         }
 
-        private bool TryParseModExpr(string script, VisitType vistType)
+        private bool TryParseModExpr(string script, Type vistType)
         {
             int start = 0;
 
@@ -149,7 +149,7 @@ namespace ModVisitor
                 {
                     if (!dictReflect.ContainsKey(matchedValue))
                     {
-                        if (vistType == VisitType.WRITE)
+                        if (vistType == Type.WRITE)
                         {
                             return false;
                         }
@@ -190,8 +190,8 @@ namespace ModVisitor
                         currReflection = currReflection.subs.Single(x => x.element.Name == matchedValue);
                     }
 
-                    if ((vistType == VisitType.READ && !currReflection.element.canRead)
-                        || (vistType == VisitType.WRITE && !currReflection.element.canWrite))
+                    if ((vistType == Type.READ && !currReflection.element.canRead)
+                        || (vistType == Type.WRITE && !currReflection.element.canWrite))
                     {
                         return false;
                     }
@@ -205,9 +205,9 @@ namespace ModVisitor
             return true;
         }
 
-        private bool TryParseDigitCalc(string script, VisitType vistType)
+        private bool TryParseDigitCalc(string script, Type vistType)
         {
-            if(vistType == VisitType.WRITE)
+            if(vistType == Type.WRITE)
             {
                 return false;
             }
